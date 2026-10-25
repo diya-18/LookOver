@@ -22,7 +22,7 @@ export default function HomePage() {
             href="/"
             className="font-semibold tracking-tight hover:opacity-80 transition-opacity"
           >
-            CodeReviewAI
+            LookOver
           </Link>
 
           <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ export default function HomePage() {
                   icon: ScanSearch,
                   title: "Open a PR",
                   description:
-                    "CodeReviewAI triggers automatically on every pull request.",
+                    "LookOver triggers automatically on every pull request.",
                 },
                 {
                   step: "3",
@@ -215,7 +215,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-border/40">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 text-sm text-muted-foreground">
-          <span>© 2025 CodeReviewAI</span>
+          <span>© 2025 LookOver</span>
           <div className="flex items-center gap-6">
             <Link
               href="/sign-in"

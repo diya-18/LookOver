@@ -1,4 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LookOver
+
+AI-powered GitHub pull request reviews for bugs, security issues, performance problems, and code quality.
+
+LookOver connects to GitHub, processes pull request changes in the background with Inngest, and stores structured review results in PostgreSQL through Prisma.
 
 ## Getting Started
 

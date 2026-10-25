@@ -1,40 +1,83 @@
 # LookOver
 
-AI-powered GitHub pull request reviews for bugs, security issues, performance problems, and code quality.
+LookOver is a personal AI-powered GitHub pull request reviewer. Connect a repository, send a pull request for review, and get feedback about bugs, security risks, performance, and maintainability.
 
-LookOver connects to GitHub, processes pull request changes in the background with Inngest, and stores structured review results in PostgreSQL through Prisma.
+## What it uses
 
-## Getting Started
+- Next.js 16, React, TypeScript, and Tailwind CSS
+- shadcn/ui for the interface
+- Better Auth for authentication
+- Prisma with PostgreSQL/Neon
+- tRPC and TanStack Query
+- Inngest for background jobs
+- OpenAI for code reviews
+- GitHub API and webhooks
+- Vercel for the current deployment
 
-First, run the development server:
+Docker, Docker Compose, and Caddy are also kept in the repository for self-hosting later. I have not set that up yet but I will probably run it on an Oracle Cloud VPS: point a domain to the server, run the app with Docker Compose and let Caddy handle HTTPS. I will add the full steps after trying it myself.
+
+## Run locally
+
+You will need Node.js 20+, pnpm, a PostgreSQL database, GitHub OAuth credentials, an OpenAI API key, and Inngest keys.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+cp .env.example .env
+pnpm auth:secret
+pnpm db:push
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+On Windows PowerShell, copy the environment file with:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+Copy-Item .env.example .env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Add your credentials to `.env`. For local GitHub OAuth, use:
 
-## Learn More
+```text
+Homepage URL: http://localhost:3000
+Callback URL: http://localhost:3000/api/auth/callback/github
+```
 
-To learn more about Next.js, take a look at the following resources:
+Then open <http://localhost:3000>.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Useful checks:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm lint
+pnpm build
+```
 
-## Deploy on Vercel
+## Deploy with Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push the repository to GitHub and import it into Vercel.
+2. Add the variables from `.env.example` in Vercel project settings.
+3. Deploy the project.
+4. Update `APP_DOMAIN`, `BETTER_AUTH_URL`, and `NEXT_PUBLIC_APP_URL` with the Vercel URL.
+5. Add the production GitHub OAuth callback:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```text
+   https://your-project.vercel.app/api/auth/callback/github
+   ```
+
+6. Configure the GitHub webhook and Inngest endpoint using the same Vercel URL:
+
+   ```text
+   https://your-project.vercel.app/api/webhooks/github
+   https://your-project.vercel.app/api/inngest
+   ```
+
+Never commit `.env` or real credentials.
+
+## Project structure
+
+```text
+src/app/          Pages and API routes
+src/components/   Shared UI components
+src/lib/          Client helpers and tRPC setup
+src/server/       Auth, database, services, and background jobs
+prisma/           Database schema
+deploy/           Files reserved for future self-hosting
+```

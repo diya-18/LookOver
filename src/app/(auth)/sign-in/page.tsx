@@ -46,10 +46,22 @@ export default function SignInPage() {
     setError("");
     setLoading(true);
 
-    await signIn.social({
-      provider: "github",
-      callbackURL: "/repos",
-    });
+    try {
+      const result = await signIn.social({
+        provider: "github",
+        callbackURL: "/repos",
+      });
+
+      if (result.error) {
+        setError(result.error.message || "Unable to sign in with GitHub");
+        setLoading(false);
+      } else if (result.data?.url) {
+        window.location.assign(result.data.url);
+      }
+    } catch {
+      setError("Unable to connect to GitHub. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (

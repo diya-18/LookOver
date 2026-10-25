@@ -16,7 +16,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { set } from "zod";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -49,10 +48,22 @@ export default function SignUpPage() {
     setError("");
     setLoading(true);
 
-    await signIn.social({
-      provider: "github",
-      callbackURL: "/repos",
-    });
+    try {
+      const result = await signIn.social({
+        provider: "github",
+        callbackURL: "/repos",
+      });
+
+      if (result.error) {
+        setError(result.error.message || "Unable to sign up with GitHub");
+        setLoading(false);
+      } else if (result.data?.url) {
+        window.location.assign(result.data.url);
+      }
+    } catch {
+      setError("Unable to connect to GitHub. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
